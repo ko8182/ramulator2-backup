@@ -1,0 +1,28 @@
+Frontend:
+  impl:  LoadStoreTrace
+  path: /home/minjun/ramu_runs/2mm_run/2mm_ldst.trace   # 처음엔 원본으로 시도
+  clock_ratio: 1
+  Translation:
+    impl: NoTranslation
+    max_addr: 8589934592    # 8 GiB. OK면, C안의 zero-base로 바꿔 Identity로 회귀
+
+MemorySystem:
+  impl: GenericDRAM
+  clock_ratio: 1
+  DRAM:
+    impl: HBM3
+    org:
+      preset: HBM3_4Gb      # 8Gb preset은 이슈#90 있으니 일단 4Gb로 스모크
+      channel: 32
+      rank: 1
+    timing:
+      preset: HBM3_2Gbps
+  Controller:
+    impl: Generic
+    Scheduler: { impl: FRFCFS }
+    RefreshManager: { impl: AllBank }
+    RowPolicy: { impl: OpenRowPolicy, cap: 4 }
+  AddrMapper:
+    impl: HBM4_GroupMapper        
+    active_channels: 16        # 우선 16으로 시작(1KB 케이스 느낌)
+    group_sel_lsb: 10

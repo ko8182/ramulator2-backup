@@ -1,0 +1,35 @@
+Frontend:
+  impl: LoadStoreTrace
+  path: /home/minjun/ramu_runs/2mm_run/2mm_ldst.trace
+  clock_ratio: 1
+
+Translation:
+  impl: RandomTranslation
+  max_addr: 2147483648
+
+MemorySystem:
+  impl: GenericDRAM
+  clock_ratio: 3
+
+  DRAM:
+    impl: HBM3
+    org:
+      preset: HBM3_4Gb
+      channel: 8
+      # rank는 HBM3 레벨에 없어서 굳이 안 넣어도 됨
+    timing:
+      preset: HBM3_2Gbps
+
+  Controller:
+    impl: Generic
+    Scheduler:
+      impl: FRFCFS
+    RefreshManager:
+      impl: AllBank
+    RowPolicy:
+      impl: ClosedRowPolicy
+      cap: 4
+    plugins:
+
+AddrMapper:
+  impl: RoBaRaCoCh
